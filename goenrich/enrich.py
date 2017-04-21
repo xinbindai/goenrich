@@ -22,20 +22,22 @@ def analyze(O, query, background_attribute, **kwargs):
             'show' : 'top20'
     }
     options.update(kwargs)
-    _query = set(query)
     terms, nodes = zip(*O.nodes(data=True))
-    M = len({x for n in nodes for x in n[background_attribute]}) # all ids used
+    allids = {x for n in nodes for x in n[background_attribute]}  # all ids used
+    M = len(allids)
+    _query = set(query).intersection(allids)
     N = len(_query)
     ps, xs, ns = calculate_pvalues(nodes, _query, background_attribute,
             M, **options)
     qs, rejs = multiple_testing_correction(ps, **options)
     df = goenrich.export.to_frame(nodes, term=terms, q=qs, rejected=rejs,
             p=ps, x=xs, n=ns, M=M, N=N)
+    df = df.dropna()[df['q']<1.0]
     if 'gvfile' in options:
         show = options['show']
         if show.startswith('top'):
             top = int(show.replace('top', ''))
-            sig = df.sort('q').head(top)['term']
+            sig = df.sort_values('q').head(top)['term']
         else:
             raise NotImplementedError(show)
         G = induced_subgraph(O, sig)
@@ -112,7 +114,7 @@ def calculate_pvalues(nodes, query, background_attribute, M,
             or (n > max_category_size)):
             vals.append((float('NaN'), x, n))
         else:
-            vals.append((hypergeom.sf(x, M, n, N), x, n))
+            vals.append((hypergeom.sf((x-1), M, n, N), x, n))
     return zip(*vals)
 
 def multiple_testing_correction(ps, alpha=0.05,
