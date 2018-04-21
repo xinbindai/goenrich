@@ -1,4 +1,4 @@
-import itertools
+import itertools, re
 import networkx as nx
 
 def _tokenize(f):
@@ -27,12 +27,20 @@ def _parse_terms(terms):
                 node['name'] = line[6:-1]
             elif line.startswith('namespace:'):
                 node['namespace'] = line[11:-1]
+            elif line.startswith('def:'):
+                node['is_obsolete']=False
+                m=re.search(r'^def:\s*"(.+)"', line)
+                if m:
+                    node['definition']=m.group(1)
+                else:
+                    node['definition']=""
             elif line.startswith('is_a:'):
                 parents.append(line[6:16])
             elif line.startswith('relationship: part_of'):
                 parents.append(line[22:32])
             elif line.startswith('is_obsolete'):
                 obsolete = True
+                node['is_obsolete']=obsolete
                 break
         if not obsolete:
             edges = [(p, id) for p in parents] # will reverse edges later
