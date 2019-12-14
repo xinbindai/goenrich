@@ -45,8 +45,10 @@ def to_graphviz(G, gvfile, graph_label='', **kwargs):
     A.graph_attr['label'] = graph_label
     A.graph_attr['labelloc'] = 't'
     
-    if hasattr(gvfile, 'write'):
-        A.write(gvfile)
-    else:
-        with open(gvfile, 'w') as f:
-            A.write(f)
+    if gvfile:
+        if hasattr(gvfile, 'write'):
+            A.write(gvfile)
+        else:
+            with open(gvfile, 'w') as f:
+                A.write(f)
+    return A
