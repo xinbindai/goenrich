@@ -32,7 +32,8 @@ def analyze(O, query, background_attribute, **kwargs):
     qs, rejs = multiple_testing_correction(ps, **options)
     df = goenrich.export.to_frame(nodes, term=terms, q=qs, rejected=rejs,
             p=ps, x=xs, n=ns, M=M, N=N)
-    df = df.dropna()[df['q']<1.0]
+    df = df.dropna()
+    df = df[df['q']<1.0] #suppress warning
     if 'gvfile' in options:
         show = options['show']
         if show.startswith('top'):
