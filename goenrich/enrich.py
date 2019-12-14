@@ -45,7 +45,7 @@ def analyze(O, query, background_attribute, **kwargs):
             if term in G:
                 G.node[term].update({'name' : node['name'], 'x' : x,
                     'q' : q, 'n' : n, 'significant' : rej})
-        G.reverse(copy=False)
+        G = G.reverse(copy=False)
         goenrich.export.to_graphviz(G, **options)
     return df
     
