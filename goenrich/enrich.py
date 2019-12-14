@@ -34,6 +34,7 @@ def analyze(O, query, background_attribute, **kwargs):
             p=ps, x=xs, n=ns, M=M, N=N)
     df = df.dropna()
     df = df[df['q']<1.0] #suppress warning
+    A = None
     if 'gvfile' in options:
         show = options['show']
         if show.startswith('top'):
@@ -47,8 +48,8 @@ def analyze(O, query, background_attribute, **kwargs):
                 G.node[term].update({'name' : node['name'], 'x' : x,
                     'q' : q, 'n' : n, 'significant' : rej})
         G = G.reverse(copy=False)
-        goenrich.export.to_graphviz(G, **options)
-    return df
+        A = goenrich.export.to_graphviz(G, **options) #dot file content
+    return df, A
     
 def propagate(O, values, attribute):
     """ Propagate values trough the hierarchy
