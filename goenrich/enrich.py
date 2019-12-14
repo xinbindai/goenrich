@@ -47,8 +47,7 @@ def analyze(O, query, background_attribute, **kwargs):
             if term in G:
                 G.node[term].update({'name' : node['name'], 'x' : x,
                     'q' : q, 'n' : n, 'significant' : rej})
-        G = G.reverse(copy=False)
-        A = goenrich.export.to_graphviz(G, **options) #dot file content
+        A = goenrich.export.to_graphviz(G.reverse(copy=False), **options) #dot file content
     return df, A
     
 def propagate(O, values, attribute):
