@@ -80,5 +80,6 @@ def ontology(file):
         for n, depth in nx.shortest_path_length(O, root).items():
             node = O.node[n]
             node['depth'] = min(depth, node.get('depth', float('inf')))
-    O.reverse(copy=False)
-    return O
+    
+    return O.reverse(copy=False)
+    
