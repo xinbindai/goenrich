@@ -31,7 +31,7 @@ setup(name='goenrich',
           'pandas',
           'scipy',
           'statsmodels<=0.8.0',
-          'networkx=2.2'],
+          'networkx==2.2'],
       test_suite='nose.collector',
       tests_require=['nose', 'setuptools'],
       zip_safe=False)
